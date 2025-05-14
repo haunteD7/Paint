@@ -146,7 +146,7 @@ void Paint::render_new_stitch_line()
 {
   Vec2i mouse_pos;
   Vec2i last_point_pos_screen = base_to_screen(stitches_abs.back(), scale, camera_pos);
-  SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
+  mouse_pos = base_to_screen(mouse_pos_base, scale, camera_pos);
 
   SDL_SetRenderDrawColor(renderer, new_line_color.r, new_line_color.g, new_line_color.b, new_line_color.a);
   SDL_RenderDrawLine(renderer, mouse_pos.x, mouse_pos.y, last_point_pos_screen.x, last_point_pos_screen.y);
@@ -290,6 +290,8 @@ void Paint::handle_event(const SDL_Event* event)
         Vec2i mouse_pos;
         SDL_GetMouseState(&mouse_pos.x, &mouse_pos.y);
         mouse_pos_base = screen_to_base(mouse_pos, scale, camera_pos);
+        mouse_pos_base.x = std::round(mouse_pos_base.x);
+        mouse_pos_base.y = std::round(mouse_pos_base.y);
         can_stitch_be_placed = check_can_stitch_be_placed(mouse_pos_base);
 
         bool rmb_pressed = SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_RMASK; // Is right mouse button pressed
